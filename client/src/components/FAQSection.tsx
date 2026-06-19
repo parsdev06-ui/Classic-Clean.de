@@ -4,7 +4,7 @@
  */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Phone, Mail, MessageCircle } from "lucide-react";
 import { useInView } from "../hooks/useInView";
 
 const faqs = [
@@ -16,7 +16,7 @@ const faqs = [
   {
     question: "Welche Unternehmen betreut Classic-Clean?",
     answer:
-      "Wir betreuen Büros, Kanzleien, Gewerbeflächen, Altenheime und Hausverwaltungen. Unser Fokus liegt ausschließlich auf dem B2B-Bereich – also auf Unternehmen und Einrichtungen, nicht auf Privathaushalten.",
+      "Wir betreuen Büros, Kanzleien, Gewerbeflächen, Pflegeeinrichtungen und Hausverwaltungen. Unser Fokus liegt ausschließlich auf dem B2B-Bereich – also auf Unternehmen und Einrichtungen, nicht auf Privathaushalten.",
   },
   {
     question: "Wie schnell erhalte ich ein Angebot?",
@@ -84,7 +84,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28 }}
+            transition={{ duration: 0.22 }}
             className="overflow-hidden"
           >
             <p
@@ -119,10 +119,31 @@ export default function FAQSection() {
             </p>
             <a
               href="tel:01636259023"
-              className="cc-btn-secondary inline-flex"
+              className="cc-btn-primary inline-flex"
             >
+              <Phone size={16} />
               Direkt anrufen
             </a>
+
+            <div className="mt-6 grid gap-2.5 text-sm" style={{ color: "#374151" }}>
+              <a href="tel:01636259023" className="flex items-center gap-2.5 hover:text-blue-600 transition-colors">
+                <Phone size={15} style={{ color: "#2563EB" }} />
+                0163 6259023
+              </a>
+              <a href="mailto:Service-Classic-clean@hotmail.com" className="flex items-center gap-2.5 hover:text-blue-600 transition-colors">
+                <Mail size={15} style={{ color: "#2563EB" }} />
+                Service-Classic-clean@hotmail.com
+              </a>
+              <a
+                href="https://wa.me/491636259023?text=Hallo%2C%20ich%20interessiere%20mich%20f%C3%BCr%20Ihre%20Reinigungsleistungen."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 hover:text-blue-600 transition-colors"
+              >
+                <MessageCircle size={15} style={{ color: "#2563EB" }} />
+                WhatsApp schreiben
+              </a>
+            </div>
           </div>
 
           {/* Right: Accordion */}
@@ -131,8 +152,8 @@ export default function FAQSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
-            className="bg-white rounded-2xl border border-gray-100 px-6 py-2"
-            style={{ boxShadow: "0 2px 12px rgba(16,42,67,0.05)" }}
+            className="bg-white rounded-xl border border-gray-100 px-5 sm:px-6 py-2"
+            style={{ boxShadow: "0 2px 10px rgba(16,42,67,0.05)" }}
           >
             {faqs.map((faq, i) => (
               <FAQItem

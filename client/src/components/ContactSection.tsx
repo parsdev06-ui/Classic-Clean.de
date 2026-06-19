@@ -163,11 +163,11 @@ export default function ContactSection() {
             transition={{ duration: 0.55, delay: 0.1 }}
           >
             <div
-              className="rounded-2xl p-7 border"
+              className="rounded-xl p-6 sm:p-7 border"
               style={{
                 background: "white",
                 borderColor: "#E5E7EB",
-                boxShadow: "0 4px 24px rgba(16,42,67,0.07)",
+                boxShadow: "0 4px 20px rgba(16,42,67,0.06)",
               }}
             >
               <h3

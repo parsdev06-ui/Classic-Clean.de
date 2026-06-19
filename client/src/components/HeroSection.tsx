@@ -49,12 +49,12 @@ export default function HeroSection() {
       <div className="container relative">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text Content */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 min-w-0 w-full max-w-[calc(100%-2.5rem)] sm:max-w-full">
             {/* Tag */}
             <motion.div
               custom={0}
               variants={fadeUp}
-              initial="hidden"
+              initial={false}
               animate="visible"
             >
               <span className="cc-tag">
@@ -67,14 +67,14 @@ export default function HeroSection() {
             <motion.h1
               custom={1}
               variants={fadeUp}
-              initial="hidden"
+              initial={false}
               animate="visible"
-              className="font-bold leading-tight"
+              className="font-bold leading-tight max-w-full"
               style={{
-                fontSize: "clamp(2.5rem, 5.5vw, 4.25rem)",
-                letterSpacing: "-0.03em",
+                fontSize: "clamp(2.35rem, 4.8vw, 3.85rem)",
+                letterSpacing: "-0.02em",
                 color: "#102A43",
-                lineHeight: 1.08,
+                lineHeight: 1.1,
               }}
             >
               Professionelle Gebäudereinigung für Unternehmen in Berlin & Brandenburg.
@@ -84,9 +84,9 @@ export default function HeroSection() {
             <motion.p
               custom={2}
               variants={fadeUp}
-              initial="hidden"
+              initial={false}
               animate="visible"
-              className="cc-subheadline max-w-lg"
+              className="cc-subheadline max-w-lg max-w-full"
             >
               Classic-Clean sorgt für saubere, gepflegte und zuverlässige Arbeitsumgebungen – persönlich betreut, flexibel geplant und professionell umgesetzt.
             </motion.p>
@@ -95,20 +95,20 @@ export default function HeroSection() {
             <motion.div
               custom={3}
               variants={fadeUp}
-              initial="hidden"
+              initial={false}
               animate="visible"
-              className="flex flex-wrap gap-3"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-[calc(100%-2.5rem)] sm:max-w-lg"
             >
               <button
                 onClick={() => scrollTo("#kontakt")}
-                className="cc-btn-primary"
+                className="cc-btn-primary w-full justify-center sm:col-span-2"
               >
                 Kostenlose Beratung anfragen
                 <ChevronRight size={16} />
               </button>
               <a
                 href="tel:01636259023"
-                className="cc-btn-secondary"
+                className="cc-btn-secondary w-full justify-center"
               >
                 <Phone size={16} />
                 Jetzt anrufen
@@ -117,7 +117,7 @@ export default function HeroSection() {
                 href="https://wa.me/491636259023?text=Hallo%2C%20ich%20interessiere%20mich%20für%20Ihre%20Reinigungsleistungen."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="cc-btn-whatsapp"
+                className="cc-btn-whatsapp w-full justify-center"
               >
                 <MessageCircle size={16} />
                 WhatsApp
@@ -128,7 +128,7 @@ export default function HeroSection() {
             <motion.div
               custom={4}
               variants={fadeUp}
-              initial="hidden"
+              initial={false}
               animate="visible"
               className="flex flex-wrap gap-4 pt-2"
             >
@@ -145,15 +145,15 @@ export default function HeroSection() {
 
           {/* Right: Visual */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, x: 20 }}
+            initial={false}
             animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.35 }}
             className="relative"
           >
             {/* Main image */}
             <div
-              className="relative rounded-2xl overflow-hidden shadow-2xl"
-              style={{ boxShadow: "0 24px 80px rgba(16, 42, 67, 0.18)" }}
+              className="relative rounded-xl overflow-hidden shadow-2xl"
+              style={{ boxShadow: "0 18px 54px rgba(16, 42, 67, 0.14)" }}
             >
               <img
                 src={HERO_IMG}
@@ -173,9 +173,9 @@ export default function HeroSection() {
 
             {/* Floating trust card */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
+              transition={{ duration: 0.25 }}
               className="absolute -bottom-5 -left-5 bg-white rounded-xl px-4 py-3 shadow-lg border border-gray-100 hidden sm:flex items-center gap-3"
             >
               <div
@@ -196,9 +196,9 @@ export default function HeroSection() {
 
             {/* Floating region card */}
             <motion.div
-              initial={{ opacity: 0, y: -16 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.85, duration: 0.5 }}
+              transition={{ duration: 0.25 }}
               className="absolute -top-4 -right-4 bg-white rounded-xl px-4 py-3 shadow-lg border border-gray-100 hidden sm:flex items-center gap-2"
             >
               <MapPin size={16} style={{ color: "#2563EB" }} />

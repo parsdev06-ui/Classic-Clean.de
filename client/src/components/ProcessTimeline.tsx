@@ -14,31 +14,31 @@ const steps = [
     title: "Anfrage stellen",
     text: "Sie kontaktieren uns telefonisch, per E-Mail oder WhatsApp – unkompliziert und direkt.",
     color: "#2563EB",
-    bgColor: "rgba(37, 99, 235, 0.1)",
+    bgColor: "rgba(37, 99, 235, 0.08)",
   },
   {
     number: "02",
     icon: MessageSquare,
     title: "Kostenlose Beratung",
     text: "Wir besprechen Ihre Flächen, Anforderungen und gewünschten Reinigungszeiten.",
-    color: "#10B981",
-    bgColor: "rgba(16, 185, 129, 0.1)",
+    color: "#2563EB",
+    bgColor: "rgba(37, 99, 235, 0.08)",
   },
   {
     number: "03",
     icon: FileText,
     title: "Individuelles Angebot",
     text: "Sie erhalten ein transparentes und unverbindliches Angebot innerhalb von 24 Stunden.",
-    color: "#7C3AED",
-    bgColor: "rgba(124, 58, 237, 0.1)",
+    color: "#2563EB",
+    bgColor: "rgba(37, 99, 235, 0.08)",
   },
   {
     number: "04",
     icon: Sparkles,
     title: "Reinigung starten",
     text: "Nach Ihrer Freigabe starten wir zuverlässig mit der professionellen Durchführung.",
-    color: "#102A43",
-    bgColor: "rgba(16, 42, 67, 0.1)",
+    color: "#2563EB",
+    bgColor: "rgba(37, 99, 235, 0.08)",
   },
 ];
 
@@ -68,7 +68,7 @@ export default function ProcessTimeline() {
           {/* Desktop connector line */}
           <div
             className="hidden lg:block absolute top-[2.75rem] left-[12.5%] right-[12.5%] h-px z-0"
-            style={{ background: "linear-gradient(to right, #E5E7EB, #E5E7EB)" }}
+            style={{ background: "linear-gradient(to right, transparent, #C7D2FE 16%, #C7D2FE 84%, transparent)" }}
           />
 
           {steps.map((step, i) => (
@@ -86,7 +86,7 @@ export default function ProcessTimeline() {
                   background: "white",
                   border: `2px solid ${step.color}`,
                   color: step.color,
-                  boxShadow: `0 0 0 6px white, 0 4px 16px ${step.bgColor}`,
+                  boxShadow: "0 0 0 6px #F8FAFC, 0 4px 14px rgba(16,42,67,0.08)",
                 }}
               >
                 {step.number}
@@ -94,10 +94,10 @@ export default function ProcessTimeline() {
 
               {/* Icon */}
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
                 style={{ background: step.bgColor }}
               >
-                <step.icon size={18} style={{ color: step.color }} />
+                <step.icon size={17} style={{ color: step.color }} />
               </div>
 
               {/* Content */}

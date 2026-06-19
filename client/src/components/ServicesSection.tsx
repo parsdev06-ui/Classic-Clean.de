@@ -63,23 +63,23 @@ export default function ServicesSection() {
             Reinigungsleistungen für Ihr Unternehmen.
           </h2>
           <p className="cc-subheadline">
-            Von der Büroreinigung bis zur Altenheimpflege – Classic-Clean bietet maßgeschneiderte Reinigungskonzepte für jede Anforderung.
+            Von der Büroreinigung bis zur Reinigung von Pflegeeinrichtungen – Classic-Clean bietet maßgeschneiderte Reinigungskonzepte für jede Anforderung.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
           {services.map((service, i) => (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.1, duration: 0.55 }}
-              className="bg-white rounded-2xl overflow-hidden border border-gray-100 group transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-              style={{ boxShadow: "0 2px 12px rgba(16,42,67,0.05)" }}
+              className="bg-white rounded-xl overflow-hidden border border-gray-100 group transition-all duration-300 hover:shadow-lg"
+              style={{ boxShadow: "0 2px 10px rgba(16,42,67,0.05)" }}
             >
               {/* Image */}
-              <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
+              <div className="relative overflow-hidden" style={{ aspectRatio: "21/10" }}>
                 <img
                   src={service.image}
                   alt={`${service.title} – Classic-Clean Berlin`}
@@ -93,14 +93,14 @@ export default function ServicesSection() {
               </div>
 
               {/* Content */}
-              <div className="p-6">
+              <div className="p-5 md:p-6">
                 <h3
-                  className="font-bold text-xl mb-2"
+                  className="font-bold text-lg mb-2"
                   style={{ color: "#102A43", letterSpacing: "-0.02em" }}
                 >
                   {service.title}
                 </h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "#6B7280" }}>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: "#6B7280" }}>
                   {service.description}
                 </p>
 
@@ -119,8 +119,8 @@ export default function ServicesSection() {
                 {/* CTA */}
                 <button
                   onClick={scrollToContact}
-                  className="flex items-center gap-1.5 text-sm font-semibold transition-colors duration-150 hover:gap-2.5"
-                  style={{ color: "#2563EB" }}
+                  className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors duration-150 hover:bg-blue-50"
+                  style={{ color: "#2563EB", borderColor: "rgba(37,99,235,0.18)" }}
                 >
                   Beratung anfragen
                   <ChevronRight size={14} />
