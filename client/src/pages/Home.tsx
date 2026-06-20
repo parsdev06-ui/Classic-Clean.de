@@ -23,7 +23,7 @@ export default function Home() {
       <Navbar />
 
       {/* Main content */}
-      <main>
+      <main className="pb-24 md:pb-0">
         {/* 2. Hero Section */}
         <HeroSection />
 
