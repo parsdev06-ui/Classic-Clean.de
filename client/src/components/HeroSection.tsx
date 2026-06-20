@@ -1,7 +1,6 @@
 /**
  * HeroSection – Classic-Clean V2
- * Design: Asymmetrisch – Text links, Premium-Visual rechts
- * Large typography, trust mini-bar, 3 CTAs
+ * Design: Mobile-first Premium Hero mit reduzierter Conversion-Hierarchie
  */
 import { motion } from "framer-motion";
 import { Phone, MessageCircle, ChevronRight, MapPin, Clock, CheckCircle2 } from "lucide-react";
@@ -10,17 +9,22 @@ const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776473482/PTubT
 
 const trustItems = [
   { icon: MapPin, text: "Berlin & Brandenburg" },
-  { icon: CheckCircle2, text: "B2B-Reinigung" },
-  { icon: Clock, text: "Angebot in 24 Stunden" },
+  { icon: CheckCircle2, text: "Feste Ansprechpartner" },
+  { icon: Clock, text: "Angebot in 24h" },
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 12 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.6 },
+    transition: { delay: i * 0.08, duration: 0.45 },
   }),
+};
+
+const imageFade = {
+  hidden: { opacity: 0, scale: 0.98 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.15 } },
 };
 
 export default function HeroSection() {
@@ -33,179 +37,99 @@ export default function HeroSection() {
   };
 
   return (
-    <section
-      className="relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28"
-      style={{ background: "linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 50%, #F0FDF4 100%)" }}
-    >
-      {/* Subtle background pattern */}
-      <div
-        className="absolute inset-0 opacity-30"
-        style={{
-          backgroundImage: `radial-gradient(circle at 20% 50%, rgba(37,99,235,0.06) 0%, transparent 50%),
-                            radial-gradient(circle at 80% 20%, rgba(16,185,129,0.06) 0%, transparent 50%)`,
-        }}
-      />
-
+    <section className="relative overflow-hidden bg-[#F8F7F2] py-14 md:py-20">
       <div className="container relative">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: Text Content */}
-          <div className="flex flex-col gap-6 min-w-0 w-full max-w-[calc(100%-2.5rem)] sm:max-w-full">
-            {/* Tag */}
-            <motion.div
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            custom={0}
+            className="order-2 lg:order-1 flex flex-col gap-6"
+          >
+            <motion.span
               custom={0}
               variants={fadeUp}
-              initial={false}
-              animate="visible"
+              className="cc-tag inline-flex"
             >
-              <span className="cc-tag">
-                <CheckCircle2 size={12} />
-                Professionelle Gebäudereinigung
-              </span>
-            </motion.div>
+              Gebäudereinigung für Unternehmen
+            </motion.span>
 
-            {/* Headline */}
             <motion.h1
               custom={1}
               variants={fadeUp}
-              initial={false}
-              animate="visible"
-              className="font-bold leading-tight max-w-full"
-              style={{
-                fontSize: "clamp(2.35rem, 4.8vw, 3.85rem)",
-                letterSpacing: "-0.02em",
-                color: "#102A43",
-                lineHeight: 1.1,
-              }}
+              className="text-3xl sm:text-[2.75rem] md:text-4xl font-semibold tracking-tight text-slate-950 leading-[1.08]"
             >
-              Professionelle Gebäudereinigung für Unternehmen in Berlin & Brandenburg.
+              Saubere Gewerbeflächen.
+              <br />
+              Zuverlässig betreut.
             </motion.h1>
 
-            {/* Subheadline */}
             <motion.p
               custom={2}
               variants={fadeUp}
-              initial={false}
-              animate="visible"
-              className="cc-subheadline max-w-lg max-w-full"
+              className="cc-subheadline max-w-2xl text-slate-600"
             >
-              Classic-Clean sorgt für saubere, gepflegte und zuverlässige Arbeitsumgebungen – persönlich betreut, flexibel geplant und professionell umgesetzt.
+              Classic-Clean übernimmt Büro-, Gewerbe- und Unterhaltsreinigung in Berlin & Brandenburg – mit festen Ansprechpartnern, klaren Abläufen und flexibler Einsatzplanung.
             </motion.p>
 
-            {/* CTAs */}
-            <motion.div
-              custom={3}
-              variants={fadeUp}
-              initial={false}
-              animate="visible"
-              className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-[calc(100%-2.5rem)] sm:max-w-lg"
-            >
+            <motion.div custom={3} variants={fadeUp} className="flex flex-col gap-4 max-w-md">
               <button
+                type="button"
                 onClick={() => scrollTo("#kontakt")}
-                className="cc-btn-primary w-full justify-center sm:col-span-2"
+                className="cc-btn-primary w-full justify-center"
               >
                 Kostenlose Beratung anfragen
                 <ChevronRight size={16} />
               </button>
-              <a
-                href="tel:01636259023"
-                className="cc-btn-secondary w-full justify-center"
-              >
-                <Phone size={16} />
-                Jetzt anrufen
-              </a>
-              <a
-                href="https://wa.me/491636259023?text=Hallo%2C%20ich%20interessiere%20mich%20für%20Ihre%20Reinigungsleistungen."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cc-btn-whatsapp w-full justify-center"
-              >
-                <MessageCircle size={16} />
-                WhatsApp
-              </a>
+
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-600">
+                <a href="tel:01636259023" className="hover:text-emerald-600 transition-colors">Jetzt anrufen</a>
+                <span aria-hidden="true" className="text-slate-300">·</span>
+                <a
+                  href="https://wa.me/491636259023?text=Hallo%2C%20ich%20interessiere%20mich%20für%20Ihre%20Reinigungsleistungen."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-600 transition-colors"
+                >
+                  WhatsApp schreiben
+                </a>
+                <span aria-hidden="true" className="text-slate-300">·</span>
+                <button
+                  type="button"
+                  onClick={() => scrollTo("#kontakt")}
+                  className="font-medium text-slate-600 hover:text-emerald-600 transition-colors"
+                >
+                  Angebot in 24h
+                </button>
+              </div>
             </motion.div>
 
-            {/* Trust mini-bar */}
-            <motion.div
-              custom={4}
-              variants={fadeUp}
-              initial={false}
-              animate="visible"
-              className="flex flex-wrap gap-4 pt-2"
-            >
+            <motion.div custom={4} variants={fadeUp} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {trustItems.map((item) => (
-                <div key={item.text} className="flex items-center gap-1.5">
-                  <item.icon size={14} style={{ color: "#10B981" }} />
-                  <span className="text-sm font-medium" style={{ color: "#6B7280" }}>
-                    {item.text}
-                  </span>
+                <div key={item.text} className="flex items-center gap-2 rounded-3xl border border-slate-200 bg-white/80 px-3 py-2 shadow-sm">
+                  <item.icon size={16} className="text-emerald-600" />
+                  <span className="text-sm font-medium text-slate-600">{item.text}</span>
                 </div>
               ))}
             </motion.div>
-          </div>
+          </motion.div>
 
-          {/* Right: Visual */}
           <motion.div
-            initial={false}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.35 }}
-            className="relative"
+            initial="hidden"
+            animate="visible"
+            variants={imageFade}
+            className="order-1 lg:order-2"
           >
-            {/* Main image */}
-            <div
-              className="relative rounded-xl overflow-hidden shadow-2xl"
-              style={{ boxShadow: "0 18px 54px rgba(16, 42, 67, 0.14)" }}
-            >
+            <div className="overflow-hidden rounded-[2rem] bg-slate-100 shadow-[0_20px_60px_rgba(16,42,67,0.12)]">
               <img
                 src={HERO_IMG}
-                alt="Professionelle Büroreinigung in Berlin – Classic-Clean Team bei der Arbeit"
-                className="w-full object-cover"
+                alt="Saubere Gewerbeflächen von Classic-Clean in Berlin"
+                className="w-full h-full object-cover"
                 style={{ aspectRatio: "4/3", objectPosition: "center" }}
                 loading="eager"
               />
-              {/* Subtle overlay for depth */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: "linear-gradient(to bottom, transparent 60%, rgba(16,42,67,0.15) 100%)",
-                }}
-              />
             </div>
-
-            {/* Floating trust card */}
-            <motion.div
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25 }}
-              className="absolute -bottom-5 -left-5 bg-white rounded-xl px-4 py-3 shadow-lg border border-gray-100 hidden sm:flex items-center gap-3"
-            >
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "rgba(16, 185, 129, 0.1)" }}
-              >
-                <CheckCircle2 size={20} style={{ color: "#10B981" }} />
-              </div>
-              <div>
-                <div className="text-sm font-semibold" style={{ color: "#102A43" }}>
-                  Kostenlose Erstberatung
-                </div>
-                <div className="text-xs" style={{ color: "#6B7280" }}>
-                  Angebot innerhalb von 24 Stunden
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Floating region card */}
-            <motion.div
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25 }}
-              className="absolute -top-4 -right-4 bg-white rounded-xl px-4 py-3 shadow-lg border border-gray-100 hidden sm:flex items-center gap-2"
-            >
-              <MapPin size={16} style={{ color: "#2563EB" }} />
-              <span className="text-sm font-semibold" style={{ color: "#102A43" }}>
-                Berlin & Brandenburg
-              </span>
-            </motion.div>
           </motion.div>
         </div>
       </div>
