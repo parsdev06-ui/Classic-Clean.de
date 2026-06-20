@@ -1,76 +1,71 @@
 /**
- * TrustBar – Classic-Clean V2
- * Design: Kompakte 4er USP-Section, keine riesigen Card-Wände
- * Icons klein, Text klar, Hover-Effekte dezent
+ * TrustBar – Classic-Clean Premium
+ * Premium Trust-Section mit ruhigem Off-White, feinen Karten und klarer Typografie
  */
 import { motion } from "framer-motion";
-import { UserCheck, Settings, Clock, Shield } from "lucide-react";
+import { ShieldCheck, Sparkle, Clock, Users } from "lucide-react";
 import { useInView } from "../hooks/useInView";
 
-const usps = [
+const trustItems = [
   {
-    icon: UserCheck,
+    icon: Users,
     title: "Persönlicher Ansprechpartner",
-    text: "Ein fester Kontakt für Beratung, Rückfragen und laufende Abstimmung.",
+    text: "Ein fester Ansprechpartner begleitet Sie von der Beratung bis zur Reinigungsausführung.",
   },
   {
-    icon: Settings,
+    icon: Sparkle,
     title: "Flexible Reinigungslösungen",
-    text: "Individuelle Reinigungskonzepte für Büros, Gewerbeflächen und Einrichtungen.",
+    text: "Modulare Leistungen für Büro, Praxis und Gewerbe – individuell abgestimmt auf Ihren Bedarf.",
   },
   {
     icon: Clock,
     title: "Angebot in 24 Stunden",
-    text: "Schnelle Rückmeldung und ein unverbindliches Angebot nach dem Erstkontakt.",
+    text: "Schnelle Rückmeldung und ein transparentes Angebot innerhalb eines Werktages.",
   },
   {
-    icon: Shield,
+    icon: ShieldCheck,
     title: "Zuverlässige Betreuung",
-    text: "Klare Kommunikation, saubere Durchführung und langfristige Zusammenarbeit.",
+    text: "Verlässliche Abläufe, regelmäßige Qualitätskontrollen und ein nachhaltiger Service.",
   },
 ];
 
 export default function TrustBar() {
-  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.15 });
 
   return (
-    <section
-      style={{ background: "white", borderTop: "1px solid #E5E7EB", borderBottom: "1px solid #E5E7EB" }}
-    >
-      <div className="container py-12 md:py-16">
-        <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
-          {usps.map((usp, i) => (
-            <motion.div
-              key={usp.title}
-              initial={{ opacity: 0, y: 20 }}
+    <section className="bg-[#F8F7F2] border-t border-slate-200 border-b border-slate-200">
+      <div className="container py-14 md:py-20">
+        <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-600 mb-3">
+            Vertrauen, das sichtbar wirkt
+          </p>
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-950 leading-tight">
+            Premium Reinigung mit Persönlichkeit und höchster Zuverlässigkeit
+          </h2>
+          <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-8">
+            Vier Gründe, warum unsere Kunden uns als professionellen Partner für ihre Gewerbeflächen wählen.
+          </p>
+        </div>
+
+        <div ref={ref} className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {trustItems.map((item, index) => (
+            <motion.article
+              key={item.title}
+              initial={{ opacity: 0, y: 18 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="flex flex-col gap-3"
+              transition={{ delay: index * 0.08, duration: 0.45 }}
+              className="group rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm shadow-slate-200/70"
             >
-              {/* Icon */}
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{ background: "rgba(16, 185, 129, 0.08)" }}
-              >
-                <usp.icon size={18} style={{ color: "#10B981" }} />
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 mb-5">
+                <item.icon size={22} className="stroke-[1.8]" />
               </div>
-
-              {/* Divider */}
-              <div className="w-8 h-0.5 rounded-full" style={{ background: "#10B981", opacity: 0.5 }} />
-
-              {/* Text */}
-              <div>
-                <h3
-                  className="font-semibold text-base mb-1.5"
-                  style={{ color: "#102A43" }}
-                >
-                  {usp.title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#6B7280" }}>
-                  {usp.text}
-                </p>
-              </div>
-            </motion.div>
+              <h3 className="text-lg font-semibold text-slate-950 mb-2">
+                {item.title}
+              </h3>
+              <p className="text-sm leading-7 text-slate-600">
+                {item.text}
+              </p>
+            </motion.article>
           ))}
         </div>
       </div>
