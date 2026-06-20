@@ -1,8 +1,7 @@
 /**
  * MobileStickyCTA – Classic-Clean V2
- * Design: Premium, minimalistisch, nicht störend
- * Scroll-Verhalten: Beim Scrollen ausblenden, nach 180ms wieder anzeigen
- * 3 Buttons: Anrufen, WhatsApp, E-Mail
+ * iOS Safari optimiert: Safe-Area, Touch-Feedback, Better Scroll-Detection
+ * Alle Endgeräte kompatibel: iPhone, Android, Tablets
  */
 import { useEffect, useRef, useState } from "react";
 import { Mail, MessageCircle, Phone } from "lucide-react";
@@ -47,8 +46,10 @@ const contactActions: ContactAction[] = [
 
 export default function MobileStickyCTA() {
   const [isHidden, setIsHidden] = useState(false);
+  const [touchedIndex, setTouchedIndex] = useState<number | null>(null);
   const scrollTimeoutRef = useRef<number | null>(null);
   const lastScrollYRef = useRef(0);
+  const isScrollingRef = useRef(false);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
@@ -59,25 +60,30 @@ export default function MobileStickyCTA() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const scrollDelta = Math.abs(currentScrollY - lastScrollYRef.current);
 
-      // Bei sehr wenig Scroll oben nicht ausblenden
+      // Bei sehr wenig Scroll oben nicht ausblenden (Threshold: 40px)
       if (currentScrollY < 40) {
         setIsHidden(false);
         lastScrollYRef.current = currentScrollY;
         return;
       }
 
-      // Beim Scrollen: CTA ausblenden
-      setIsHidden(true);
+      // Nur ausblenden bei echte Scrollbewegung > 5px (verhindert nervöse Animation)
+      if (scrollDelta > 5) {
+        isScrollingRef.current = true;
+        setIsHidden(true);
 
-      if (scrollTimeoutRef.current) {
-        window.clearTimeout(scrollTimeoutRef.current);
+        if (scrollTimeoutRef.current) {
+          window.clearTimeout(scrollTimeoutRef.current);
+        }
+
+        // Nach 180ms ohne Scrollbewegung: wieder einblenden
+        scrollTimeoutRef.current = window.setTimeout(() => {
+          setIsHidden(false);
+          isScrollingRef.current = false;
+        }, 180);
       }
-
-      // Nach 180ms ohne Scrollbewegung: wieder einblenden
-      scrollTimeoutRef.current = window.setTimeout(() => {
-        setIsHidden(false);
-      }, 180);
 
       lastScrollYRef.current = currentScrollY;
     };
@@ -92,6 +98,14 @@ export default function MobileStickyCTA() {
     };
   }, []);
 
+  const handleTouchStart = (index: number) => {
+    setTouchedIndex(index);
+  };
+
+  const handleTouchEnd = () => {
+    setTouchedIndex(null);
+  };
+
   return (
     <nav
       aria-label="Schnelle Kontaktmöglichkeiten"
@@ -105,12 +119,17 @@ export default function MobileStickyCTA() {
           : "translate-y-0 opacity-100",
       ].join(" ")}
       style={{
-        paddingBottom: "env(safe-area-inset-bottom)",
-      }}
+        paddingBottom: "max(env(safe-area-inset-bottom), 0.75rem)",
+        WebkitUserSelect: "none",
+        userSelect: "none",
+        WebkitTouchCallout: "none",
+      } as React.CSSProperties}
     >
       <div className="flex items-stretch gap-2 px-3 py-3">
-        {contactActions.map((action) => {
+        {contactActions.map((action, idx) => {
           const Icon = action.icon;
+          const isPressed = touchedIndex === idx;
+
           return (
             <a
               key={action.label}
@@ -118,13 +137,20 @@ export default function MobileStickyCTA() {
               aria-label={action.ariaLabel}
               target={action.external ? "_blank" : undefined}
               rel={action.external ? "noopener noreferrer" : undefined}
+              onTouchStart={() => handleTouchStart(idx)}
+              onTouchEnd={handleTouchEnd}
+              onTouchCancel={handleTouchEnd}
               className={[
                 "flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2.5",
                 "text-xs font-semibold",
-                "transition-all duration-200 ease-out",
-                "active:scale-[0.97]",
+                "transition-all duration-150 ease-out",
+                "active:scale-[0.97] active:opacity-80",
+                isPressed && "scale-[0.97] opacity-80",
                 action.wrapperClass,
               ].join(" ")}
+              style={{
+                WebkitTapHighlightColor: "transparent",
+              }}
             >
               <span
                 className={[
