@@ -1,7 +1,7 @@
 /**
  * MobileStickyCTA – Classic-Clean V2
- * iOS Safari optimiert: Safe-Area, Touch-Feedback, Better Scroll-Detection
- * Alle Endgeräte kompatibel: iPhone, Android, Tablets
+ * Safari-optimiert: scrollend Event, größerer Threshold, explizites Positioning
+ * Alle Endgeräte kompatibel: iPhone Safari, Chrome, Firefox, Android
  */
 import { useEffect, useRef, useState } from "react";
 import { Mail, MessageCircle, Phone } from "lucide-react";
@@ -47,9 +47,9 @@ const contactActions: ContactAction[] = [
 export default function MobileStickyCTA() {
   const [isHidden, setIsHidden] = useState(false);
   const [touchedIndex, setTouchedIndex] = useState<number | null>(null);
-  const scrollTimeoutRef = useRef<number | null>(null);
+  const hideTimeoutRef = useRef<number | null>(null);
   const lastScrollYRef = useRef(0);
-  const isScrollingRef = useRef(false);
+  const hasScrollendSupport = useRef(true);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
@@ -58,9 +58,13 @@ export default function MobileStickyCTA() {
 
     if (prefersReducedMotion) return;
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = Math.abs(currentScrollY - lastScrollYRef.current);
+    // Nutze scrollingElement für bessere Safari-Kompatibilität
+    const getScrollY = () => {
+      return document.documentElement.scrollTop || window.scrollY || 0;
+    };
+
+    const handleScrollEnd = () => {
+      const currentScrollY = getScrollY();
 
       // Bei sehr wenig Scroll oben nicht ausblenden (Threshold: 40px)
       if (currentScrollY < 40) {
@@ -69,31 +73,61 @@ export default function MobileStickyCTA() {
         return;
       }
 
-      // Nur ausblenden bei echte Scrollbewegung > 5px (verhindert nervöse Animation)
-      if (scrollDelta > 5) {
-        isScrollingRef.current = true;
+      // Nach 200ms: wieder einblenden wenn Scroll beendet
+      if (hideTimeoutRef.current) {
+        window.clearTimeout(hideTimeoutRef.current);
+      }
+
+      setIsHidden(false);
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    const handleScroll = () => {
+      const currentScrollY = getScrollY();
+      const scrollDelta = Math.abs(currentScrollY - lastScrollYRef.current);
+
+      // Bei sehr wenig Scroll oben nicht ausblenden
+      if (currentScrollY < 40) {
+        setIsHidden(false);
+        lastScrollYRef.current = currentScrollY;
+        return;
+      }
+
+      // Größerer Threshold: 20px statt 5px (verhindert nervöse Animation in Safari)
+      if (scrollDelta > 20) {
         setIsHidden(true);
 
-        if (scrollTimeoutRef.current) {
-          window.clearTimeout(scrollTimeoutRef.current);
+        if (hideTimeoutRef.current) {
+          window.clearTimeout(hideTimeoutRef.current);
         }
 
-        // Nach 180ms ohne Scrollbewegung: wieder einblenden
-        scrollTimeoutRef.current = window.setTimeout(() => {
+        // Nach 200ms: wieder einblenden
+        hideTimeoutRef.current = window.setTimeout(() => {
           setIsHidden(false);
-          isScrollingRef.current = false;
-        }, 180);
+        }, 200);
       }
 
       lastScrollYRef.current = currentScrollY;
     };
 
+    // Versuche scrollend zu nutzen (iOS 13.4+ Safari)
+    const supportsScrollend = "onscrollend" in window;
+    hasScrollendSupport.current = supportsScrollend;
+
+    if (supportsScrollend) {
+      window.addEventListener("scrollend", handleScrollEnd, { passive: true });
+    }
+
+    // Fallback: normales scroll event als Backup
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
+      if (supportsScrollend) {
+        window.removeEventListener("scrollend", handleScrollEnd);
+      }
       window.removeEventListener("scroll", handleScroll);
-      if (scrollTimeoutRef.current) {
-        window.clearTimeout(scrollTimeoutRef.current);
+      if (hideTimeoutRef.current) {
+        window.clearTimeout(hideTimeoutRef.current);
       }
     };
   }, []);
@@ -106,29 +140,43 @@ export default function MobileStickyCTA() {
     setTouchedIndex(null);
   };
 
+  const safeAreaPadding =
+    "max(env(safe-area-inset-bottom), 0.75rem)";
+
   return (
     <nav
       aria-label="Schnelle Kontaktmöglichkeiten"
-      className={[
-        "fixed inset-x-0 bottom-0 z-50 md:hidden",
-        "border-t border-slate-200/80 bg-white/92 backdrop-blur-xl",
-        "shadow-[0_-16px_40px_rgba(15,23,42,0.08)]",
-        "transition-all duration-300 ease-out will-change-transform",
-        isHidden
-          ? "translate-y-full opacity-0"
-          : "translate-y-0 opacity-100",
-      ].join(" ")}
+      className="md:hidden"
       style={{
-        paddingBottom: "max(env(safe-area-inset-bottom), 0.75rem)",
+        position: "fixed",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 50,
+        borderTop: "1px solid rgba(203, 213, 225, 0.8)",
+        background: "rgba(255, 255, 255, 0.92)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        boxShadow: "0 -16px 40px rgba(15, 23, 42, 0.08)",
+        transition: isHidden
+          ? "opacity 300ms ease-out, transform 300ms ease-out"
+          : "opacity 300ms ease-out, transform 300ms ease-out",
+        opacity: isHidden ? 0 : 1,
+        transform: isHidden ? "translateY(100%)" : "translateY(0)",
+        paddingBottom: safeAreaPadding,
         WebkitUserSelect: "none",
         userSelect: "none",
         WebkitTouchCallout: "none",
       } as React.CSSProperties}
     >
-      <div className="flex items-stretch gap-2 px-3 py-3">
+      <div style={{ display: "flex", alignItems: "stretch", gap: "0.5rem", padding: "0.75rem" }}>
         {contactActions.map((action, idx) => {
           const Icon = action.icon;
           const isPressed = touchedIndex === idx;
+
+          const wrapperClasses = action.wrapperClass.split(" ");
+          const bgColor = wrapperClasses.find((c) => c.startsWith("bg-"));
+          const textColor = wrapperClasses.find((c) => c.startsWith("text-"));
 
           return (
             <a
@@ -140,24 +188,36 @@ export default function MobileStickyCTA() {
               onTouchStart={() => handleTouchStart(idx)}
               onTouchEnd={handleTouchEnd}
               onTouchCancel={handleTouchEnd}
-              className={[
-                "flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2.5",
-                "text-xs font-semibold",
-                "transition-all duration-150 ease-out",
-                "active:scale-[0.97] active:opacity-80",
-                isPressed && "scale-[0.97] opacity-80",
-                action.wrapperClass,
-              ].join(" ")}
               style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.25rem",
+                borderRadius: "1rem",
+                padding: "0.5rem",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                transition: "all 150ms ease-out",
+                transform: isPressed ? "scale(0.97)" : "scale(1)",
+                opacity: isPressed ? 0.8 : 1,
                 WebkitTapHighlightColor: "transparent",
+                cursor: "pointer",
               }}
+              className={action.wrapperClass}
             >
               <span
-                className={[
-                  "flex h-9 w-9 items-center justify-center rounded-xl",
-                  "shadow-sm",
-                  action.iconClass,
-                ].join(" ")}
+                style={{
+                  display: "flex",
+                  width: "2.25rem",
+                  height: "2.25rem",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "0.75rem",
+                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
+                }}
+                className={action.iconClass}
               >
                 <Icon size={16} strokeWidth={2} />
               </span>
