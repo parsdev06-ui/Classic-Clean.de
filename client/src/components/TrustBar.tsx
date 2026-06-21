@@ -1,65 +1,77 @@
 /**
- * TrustBar – Classic-Clean Premium
- * Kompakte Trust-Section mit eleganter Typografie und feinen Cards.
+ * TrustBar – Classic-Clean V2 Dark Theme
+ * Dark navy background with glow cards, emerald/blue gradient borders
  */
 import { motion } from "framer-motion";
-import { ShieldCheck, Sparkle, Clock, Users } from "lucide-react";
+import { Users, Clock, Zap, Shield } from "lucide-react";
 import { useInView } from "../hooks/useInView";
 
 const trustItems = [
   {
     icon: Users,
-    title: "Persönlicher Ansprechpartner",
-    text: "Feste Betreuung, klare Kommunikation und schnelle Abstimmung.",
-  },
-  {
-    icon: Sparkle,
-    title: "Flexible Reinigungslösungen",
-    text: "Maßgeschneiderte Reinigung für Büro, Praxis, Handel und Gewerbe.",
+    title: "Fester Ansprechpartner",
+    text: "Klare Kommunikation, zuverlässige Betreuung und schnelle Abstimmung.",
   },
   {
     icon: Clock,
     title: "Angebot in 24 Stunden",
-    text: "Unverbindliches Angebot innerhalb eines Werktages.",
+    text: "Unverbindliches Kostenvoranschlag innerhalb eines Werktages.",
   },
   {
-    icon: ShieldCheck,
-    title: "Zuverlässige Betreuung",
-    text: "Regelmäßige Qualitätskontrolle und langfristiger Service.",
+    icon: Zap,
+    title: "Flexible Einsatzzeiten",
+    text: "Maßgeschneiderte Reinigungszeitfenster für Ihr Geschäft.",
+  },
+  {
+    icon: Shield,
+    title: "Qualität mit System",
+    text: "Regelmäßige Qualitätskontrolle und langfristige Partnerschaft.",
   },
 ];
 
 export default function TrustBar() {
-  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2 });
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.15 });
 
   return (
-    <section className="bg-white border-t border-slate-200">
-      <div className="container py-12 md:py-16">
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.23em] text-emerald-600 mb-3">
-            Unsere Qualitätsversprechen
-          </p>
-          <h2 className="text-2xl md:text-3xl font-semibold text-slate-950 leading-tight">
-            Vertrauen, das Ihre Gewerbeflächen langfristig schützt.
-          </h2>
-        </div>
-
-        <div ref={ref} className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <section
+      className="border-t"
+      style={{
+        backgroundColor: "#0A1D2E",
+        borderColor: "rgba(255, 255, 255, 0.07)",
+      }}
+    >
+      <div className="container py-16 md:py-24">
+        <div ref={ref} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {trustItems.map((item, index) => (
             <motion.article
               key={item.title}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.08, duration: 0.45 }}
-              className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-5"
+              transition={{
+                delay: index * 0.12,
+                duration: 0.5,
+                ease: "easeOut",
+              }}
+              className="cc-glow-card group"
             >
-              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm">
-                <item.icon size={20} className="stroke-[1.8]" />
+              <div className="cc-glow-card-icon mb-4 group-hover:shadow-[0_0_24px_rgba(16,185,129,0.24)]">
+                <item.icon size={22} strokeWidth={1.5} />
               </div>
-              <h3 className="text-base font-semibold text-slate-950 mb-2">
+              <h3
+                className="mb-2 font-semibold leading-tight transition-colors group-hover:text-emerald-300"
+                style={{
+                  fontSize: "1rem",
+                  color: "#F1F5F9",
+                }}
+              >
                 {item.title}
               </h3>
-              <p className="text-sm leading-7 text-slate-600">
+              <p
+                className="text-sm leading-relaxed"
+                style={{
+                  color: "#A8B4C3",
+                }}
+              >
                 {item.text}
               </p>
             </motion.article>

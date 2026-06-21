@@ -59,6 +59,12 @@
   --cc-muted: #6B7280;
   --cc-border: #E5E7EB;
 
+  /* Hero Dark Theme Colors */
+  --cc-hero-bg: #061522;
+  --cc-hero-surface: #081C2C;
+  --cc-hero-navy: #102A43;
+  --cc-trustbar-bg: #0A1D2E;
+
   /* Semantic tokens */
   --background: oklch(0.985 0.003 240);
   --foreground: oklch(0.13 0.015 240);
@@ -313,6 +319,130 @@
     background: rgba(248, 250, 252, 0.97);
     box-shadow: 0 1px 16px rgba(16, 42, 67, 0.06);
   }
+
+  /* Hero Glow Effects */
+  .cc-hero-glow-word {
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
+    font-style: italic;
+    font-weight: 500;
+    background-image: linear-gradient(
+      100deg,
+      #6EE7B7 0%,
+      #A7F3D0 42%,
+      #93C5FD 100%
+    );
+    background-size: 220% 100%;
+    background-position: 100% 50%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 0 16px rgba(52, 211, 153, 0.24))
+            drop-shadow(0 0 34px rgba(16, 185, 129, 0.14))
+            drop-shadow(0 0 52px rgba(37, 99, 235, 0.08));
+  }
+
+  .cc-hero-glow-word::after {
+    content: "";
+    position: absolute;
+    inset: 20% -10% 5%;
+    z-index: -1;
+    background: rgba(16, 185, 129, 0.18);
+    filter: blur(24px);
+    border-radius: 999px;
+    pointer-events: none;
+  }
+
+  .cc-glow-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #6EE7B7;
+    background: rgba(16, 185, 129, 0.07);
+    border: 1px solid rgba(52, 211, 153, 0.28);
+    padding: 0.625rem 0.875rem;
+    border-radius: 9999px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.08);
+    height: 34px;
+    line-height: 1;
+  }
+
+  .cc-glow-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(
+      100deg,
+      #2563EB 0%,
+      #2F6FEB 55%,
+      #1D4ED8 100%
+    );
+    color: white;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.875rem 1.75rem;
+    border-radius: 1.125rem;
+    transition: all 0.18s cubic-bezier(0.23, 1, 0.32, 1);
+    text-decoration: none;
+    white-space: nowrap;
+    justify-content: center;
+    min-height: 3.625rem;
+    box-shadow: 0 16px 38px rgba(37, 99, 235, 0.34),
+                0 0 34px rgba(16, 185, 129, 0.11);
+  }
+
+  .cc-glow-cta:hover {
+    box-shadow: 0 22px 52px rgba(37, 99, 235, 0.42),
+                0 0 44px rgba(16, 185, 129, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .cc-glow-cta:active {
+    transform: scale(0.99);
+  }
+
+  .cc-glow-cta:focus-visible {
+    outline: 2px solid rgba(99, 235, 200, 0.5);
+    outline-offset: 2px;
+  }
+
+  .cc-glow-card {
+    background: rgba(16, 28, 44, 0.4);
+    border: 1px solid;
+    border-image-source: linear-gradient(
+      135deg,
+      rgba(52, 211, 153, 0.28),
+      rgba(37, 99, 235, 0.18)
+    );
+    border-image-slice: 1;
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.06);
+    transition: all 0.22s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .cc-glow-card:hover {
+    box-shadow: 0 0 28px rgba(16, 185, 129, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .cc-glow-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 1.25rem;
+    background: rgba(52, 211, 153, 0.1);
+    color: #6EE7B7;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.12);
+  }
 }
 
 /* Scroll animations */
@@ -331,9 +461,44 @@
   animation: fadeInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
+/* Hero Glow Animations */
+@keyframes cc-text-shine {
+  from {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-up {
     animation: none;
+  }
+  .cc-hero-glow-word {
+    animation: none !important;
   }
 }
 

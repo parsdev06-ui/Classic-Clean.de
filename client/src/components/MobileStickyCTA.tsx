@@ -1,7 +1,7 @@
 /**
  * MobileStickyCTA – Classic-Clean V2
- * Safari-optimiert: scrollend Event, größerer Threshold, explizites Positioning
- * Alle Endgeräte kompatibel: iPhone Safari, Chrome, Firefox, Android
+ * Safari-optimized: IntersectionObserver + scroll behavior
+ * Smart show/hide: Hidden when primary CTA is visible, shows when scrolled past
  */
 import { useEffect, useRef, useState } from "react";
 import { Mail, MessageCircle, Phone } from "lucide-react";
@@ -46,19 +46,42 @@ const contactActions: ContactAction[] = [
 
 export default function MobileStickyCTA() {
   const [isHidden, setIsHidden] = useState(false);
+  const [isCTAVisible, setIsCTAVisible] = useState(true);
   const [touchedIndex, setTouchedIndex] = useState<number | null>(null);
   const hideTimeoutRef = useRef<number | null>(null);
   const lastScrollYRef = useRef(0);
-  const hasScrollendSupport = useRef(true);
+  const ctaObserverRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    if (prefersReducedMotion) return;
+    // IntersectionObserver for primary CTA visibility
+    const initCTAObserver = () => {
+      const primaryCTAButton = document.querySelector(
+        'button:has(svg[class*="chevron"])'
+      ) || document.querySelector('section:first-of-type button');
 
-    // Nutze scrollingElement für bessere Safari-Kompatibilität
+      if (primaryCTAButton) {
+        ctaObserverRef.current = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              setIsCTAVisible(entry.isIntersecting);
+            });
+          },
+          { threshold: 0.2 }
+        );
+
+        ctaObserverRef.current.observe(primaryCTAButton);
+      }
+    };
+
+    if (!prefersReducedMotion) {
+      initCTAObserver();
+    }
+
+    // Scroll behavior: hide when scrolling, show after stop
     const getScrollY = () => {
       return document.documentElement.scrollTop || window.scrollY || 0;
     };
@@ -66,19 +89,19 @@ export default function MobileStickyCTA() {
     const handleScrollEnd = () => {
       const currentScrollY = getScrollY();
 
-      // Bei sehr wenig Scroll oben nicht ausblenden (Threshold: 40px)
+      // If at top of page, show sticky CTA when primary CTA not visible
       if (currentScrollY < 40) {
-        setIsHidden(false);
+        setIsHidden(isCTAVisible);
         lastScrollYRef.current = currentScrollY;
         return;
       }
 
-      // Nach 200ms: wieder einblenden wenn Scroll beendet
+      // After 180-220ms: reappear after scroll stops
       if (hideTimeoutRef.current) {
         window.clearTimeout(hideTimeoutRef.current);
       }
 
-      setIsHidden(false);
+      setIsHidden(isCTAVisible);
       lastScrollYRef.current = currentScrollY;
     };
 
@@ -86,22 +109,21 @@ export default function MobileStickyCTA() {
       const currentScrollY = getScrollY();
       const scrollDelta = Math.abs(currentScrollY - lastScrollYRef.current);
 
-      // Bei sehr wenig Scroll oben nicht ausblenden
       if (currentScrollY < 40) {
-        setIsHidden(false);
+        setIsHidden(isCTAVisible);
         lastScrollYRef.current = currentScrollY;
         return;
       }
 
-      // Größerer Threshold: 20px statt 5px (verhindert nervöse Animation in Safari)
-      if (scrollDelta > 20) {
+      // Show sticky CTA while scrolling if primary CTA not visible
+      if (scrollDelta > 15 && !isCTAVisible) {
         setIsHidden(true);
 
         if (hideTimeoutRef.current) {
           window.clearTimeout(hideTimeoutRef.current);
         }
 
-        // Nach 200ms: wieder einblenden
+        // After 180-220ms: slide back up
         hideTimeoutRef.current = window.setTimeout(() => {
           setIsHidden(false);
         }, 200);
@@ -110,15 +132,12 @@ export default function MobileStickyCTA() {
       lastScrollYRef.current = currentScrollY;
     };
 
-    // Versuche scrollend zu nutzen (iOS 13.4+ Safari)
     const supportsScrollend = "onscrollend" in window;
-    hasScrollendSupport.current = supportsScrollend;
 
     if (supportsScrollend) {
       window.addEventListener("scrollend", handleScrollEnd, { passive: true });
     }
 
-    // Fallback: normales scroll event als Backup
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
@@ -129,8 +148,11 @@ export default function MobileStickyCTA() {
       if (hideTimeoutRef.current) {
         window.clearTimeout(hideTimeoutRef.current);
       }
+      if (ctaObserverRef.current) {
+        ctaObserverRef.current.disconnect();
+      }
     };
-  }, []);
+  }, [isCTAVisible]);
 
   const handleTouchStart = (index: number) => {
     setTouchedIndex(index);
@@ -139,6 +161,9 @@ export default function MobileStickyCTA() {
   const handleTouchEnd = () => {
     setTouchedIndex(null);
   };
+
+  // Hide sticky CTA when primary CTA is visible
+  const shouldHideCompletely = isCTAVisible;
 
   const safeAreaPadding =
     "max(env(safe-area-inset-bottom), 0.75rem)";
@@ -158,11 +183,19 @@ export default function MobileStickyCTA() {
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         boxShadow: "0 -16px 40px rgba(15, 23, 42, 0.08)",
-        transition: isHidden
-          ? "opacity 300ms ease-out, transform 300ms ease-out"
-          : "opacity 300ms ease-out, transform 300ms ease-out",
-        opacity: isHidden ? 0 : 1,
-        transform: isHidden ? "translateY(100%)" : "translateY(0)",
+        transition: shouldHideCompletely
+          ? "opacity 300ms ease-out, transform 300ms ease-out, visibility 300ms ease-out"
+          : isHidden
+            ? "opacity 300ms ease-out, transform 300ms ease-out"
+            : "opacity 300ms ease-out, transform 300ms ease-out",
+        opacity: shouldHideCompletely ? 0 : isHidden ? 0 : 1,
+        transform: shouldHideCompletely
+          ? "translateY(100%)"
+          : isHidden
+            ? "translateY(100%)"
+            : "translateY(0)",
+        visibility: shouldHideCompletely ? "hidden" : "visible",
+        pointerEvents: shouldHideCompletely ? "none" : "auto",
         paddingBottom: safeAreaPadding,
         WebkitUserSelect: "none",
         userSelect: "none",
