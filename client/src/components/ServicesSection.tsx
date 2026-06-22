@@ -54,15 +54,15 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id="leistungen" className="cc-section" style={{ background: "#F8FAFC" }}>
+    <section id="leistungen" className="cc-section cc-services-section">
       <div className="container">
         {/* Section Header */}
-        <div className="max-w-2xl mb-12 md:mb-16">
-          <span className="cc-tag mb-4 inline-flex">Unsere Leistungen</span>
-          <h2 className="cc-headline mb-4">
+        <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+          <span className="cc-tag cc-services-kicker mb-4 inline-flex">Unsere Leistungen</span>
+          <h2 className="cc-headline cc-services-headline mb-4">
             Reinigungsleistungen für Ihr Unternehmen.
           </h2>
-          <p className="cc-subheadline">
+          <p className="cc-subheadline max-w-2xl mx-auto">
             Von der Büroreinigung bis zur Reinigung von Pflegeeinrichtungen – Classic-Clean bietet maßgeschneiderte Reinigungskonzepte für jede Anforderung.
           </p>
         </div>
@@ -75,32 +75,29 @@ export default function ServicesSection() {
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.1, duration: 0.55 }}
-              className="bg-white rounded-xl overflow-hidden border border-gray-100 group transition-all duration-300 hover:shadow-lg"
-              style={{ boxShadow: "0 2px 10px rgba(16,42,67,0.05)" }}
+              whileHover={{ y: -3 }}
+              className="cc-service-card group"
             >
               {/* Image */}
-              <div className="relative overflow-hidden" style={{ aspectRatio: "21/10" }}>
+              <div className="cc-service-image-wrap relative overflow-hidden">
                 <img
                   src={service.image}
                   alt={`${service.title} – Classic-Clean Berlin`}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 50%, rgba(16,42,67,0.4) 100%)" }} />
+                <div className="cc-service-image-overlay absolute inset-0" />
                 {/* Tag overlay */}
                 <div className="absolute top-3 left-3">
-                  <span className="cc-tag text-xs">{service.tag}</span>
+                  <span className="cc-tag cc-service-card-tag text-xs">{service.tag}</span>
                 </div>
               </div>
 
               {/* Content */}
-              <div className="p-5 md:p-6">
-                <h3
-                  className="font-bold text-lg mb-2"
-                  style={{ color: "#102A43", letterSpacing: "-0.02em" }}
-                >
+              <div className="cc-service-card-content p-5 md:p-6">
+                <h3 className="cc-service-card-title font-bold text-lg mb-2">
                   {service.title}
                 </h3>
-                <p className="text-sm leading-relaxed mb-3" style={{ color: "#6B7280" }}>
+                <p className="cc-service-card-description text-sm leading-relaxed mb-3">
                   {service.description}
                 </p>
 
@@ -108,8 +105,8 @@ export default function ServicesSection() {
                 <ul className="flex flex-col gap-2 mb-5">
                   {service.benefits.map((benefit) => (
                     <li key={benefit} className="flex items-center gap-2">
-                      <CheckCircle2 size={14} style={{ color: "#10B981", flexShrink: 0 }} />
-                      <span className="text-sm font-medium" style={{ color: "#374151" }}>
+                      <CheckCircle2 size={14} className="cc-service-benefit-icon" />
+                      <span className="cc-service-benefit-text text-sm font-medium">
                         {benefit}
                       </span>
                     </li>
@@ -119,8 +116,7 @@ export default function ServicesSection() {
                 {/* CTA */}
                 <button
                   onClick={scrollToContact}
-                  className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors duration-150 hover:bg-blue-50"
-                  style={{ color: "#2563EB", borderColor: "rgba(37,99,235,0.18)" }}
+                  className="cc-service-cta inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-semibold"
                 >
                   Beratung anfragen
                   <ChevronRight size={14} />
