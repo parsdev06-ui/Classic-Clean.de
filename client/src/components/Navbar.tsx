@@ -1,11 +1,10 @@
 /**
- * Navbar – Classic-Clean V2
- * Design: Berliner Klarheit – Glassmorphism, sticky, scroll-aware
- * Colors: Navy #102A43, Emerald #10B981, Blue CTA #2563EB
+ * Navbar – Classic-Clean V2 (Premium Redesign)
+ * Everlast-inspired: dark navy · emerald pill logo · nav island · shimmer CTA · animated hamburger
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, Menu, X, ChevronRight } from "lucide-react";
+import { Phone, ArrowRight } from "lucide-react";
 
 const navLinks = [
   { label: "Leistungen", href: "#leistungen" },
@@ -25,80 +24,71 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = useCallback((href: string) => {
     setMobileOpen(false);
     const el = document.querySelector(href);
     if (el) {
-      const offset = 80;
-      const top = el.getBoundingClientRect().top + window.scrollY - offset;
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top, behavior: "smooth" });
     }
-  };
+  }, []);
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? "cc-navbar-scrolled" : "cc-navbar-glass"
-        }`}
+        className={`cc-nav-root fixed top-0 left-0 right-0 z-50${scrolled ? " cc-nav-scrolled" : ""}`}
       >
         <div className="container">
-          <div className="flex items-center justify-between h-16 md:h-18">
+          <div className="cc-nav-inner">
+
             {/* Logo */}
-            <a
-              href="/"
-              className="flex items-center gap-2.5 group"
-              aria-label="Classic-Clean Startseite"
-            >
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#102A43" }}>
-                <span className="text-white font-bold text-sm tracking-tight">CC</span>
-              </div>
-              <span className="font-bold text-lg tracking-tight" style={{ color: "#102A43" }}>
-                Classic-Clean
-              </span>
+            <a href="/" className="cc-nav-logo" aria-label="Classic-Clean – Startseite">
+              <span className="cc-nav-logo-pill">CC</span>
+              <span className="cc-nav-logo-text">Classic-Clean</span>
             </a>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* Desktop Nav Island */}
+            <nav className="cc-nav-links hidden lg:flex" aria-label="Hauptnavigation">
               {navLinks.map((link) => (
                 <button
                   key={link.href}
                   onClick={() => handleNavClick(link.href)}
-                  className="px-3.5 py-2 text-sm font-medium rounded-md transition-colors duration-150 hover:bg-gray-100"
-                  style={{ color: "#374151" }}
+                  className="cc-nav-link"
                 >
                   {link.label}
                 </button>
               ))}
             </nav>
 
-            {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center gap-3">
-              <a
-                href="tel:01636259023"
-                className="flex items-center gap-1.5 text-sm font-medium transition-colors"
-                style={{ color: "#6B7280" }}
-              >
-                <Phone size={14} />
+            {/* Desktop Right */}
+            <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
+              <a href="tel:01636259023" className="cc-nav-phone">
+                <Phone size={13} aria-hidden="true" />
                 0163 6259023
               </a>
               <button
                 onClick={() => handleNavClick("#kontakt")}
-                className="cc-btn-primary text-sm py-2 px-4"
+                className="cc-nav-cta"
+                aria-label="Anfrage starten"
               >
-                Anfrage starten
-                <ChevronRight size={14} />
+                <span className="cc-nav-cta-shimmer" aria-hidden="true" />
+                <span className="cc-nav-cta-icon" aria-hidden="true">
+                  <ArrowRight size={14} strokeWidth={1.8} />
+                </span>
+                <span className="cc-nav-cta-text">Anfrage starten</span>
               </button>
             </div>
 
-            {/* Mobile Burger */}
+            {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 rounded-md transition-colors hover:bg-gray-100"
-              aria-label="Menü öffnen"
-              style={{ color: "#102A43" }}
+              className="cc-nav-hamburger lg:hidden"
+              aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
+              aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              <span className={`cc-nav-bar${mobileOpen ? " cc-nav-bar--top-open" : ""}`} />
+              <span className={`cc-nav-bar${mobileOpen ? " cc-nav-bar--mid-open" : ""}`} />
+              <span className={`cc-nav-bar${mobileOpen ? " cc-nav-bar--bot-open" : ""}`} />
             </button>
           </div>
         </div>
@@ -108,41 +98,46 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed top-16 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-xl lg:hidden"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+            className="cc-nav-mobile fixed inset-x-0 top-[62px] z-40 lg:hidden"
           >
-            <div className="container py-4">
-              <nav className="flex flex-col gap-1">
-                {navLinks.map((link) => (
-                  <button
+            <div className="container py-5">
+              <nav className="flex flex-col gap-0.5 mb-5">
+                {navLinks.map((link, i) => (
+                  <motion.button
                     key={link.href}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.045, duration: 0.2 }}
                     onClick={() => handleNavClick(link.href)}
-                    className="flex items-center justify-between px-4 py-3 rounded-lg text-left font-medium transition-colors hover:bg-gray-50"
-                    style={{ color: "#111827" }}
+                    className="cc-nav-mobile-link"
                   >
                     {link.label}
-                    <ChevronRight size={16} style={{ color: "#9CA3AF" }} />
-                  </button>
+                    <ArrowRight size={14} className="opacity-35" aria-hidden="true" />
+                  </motion.button>
                 ))}
               </nav>
-              <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-3">
+              <div className="flex flex-col gap-3 pt-4 border-t border-white/10">
                 <a
                   href="tel:01636259023"
-                  className="cc-btn-secondary justify-center"
+                  className="cc-nav-mobile-phone justify-center"
                   onClick={() => setMobileOpen(false)}
                 >
-                  <Phone size={16} />
+                  <Phone size={15} aria-hidden="true" />
                   0163 6259023
                 </a>
                 <button
                   onClick={() => handleNavClick("#kontakt")}
-                  className="cc-btn-primary justify-center"
+                  className="cc-nav-cta cc-nav-cta--full"
                 >
-                  Anfrage starten
-                  <ChevronRight size={16} />
+                  <span className="cc-nav-cta-shimmer" aria-hidden="true" />
+                  <span className="cc-nav-cta-icon" aria-hidden="true">
+                    <ArrowRight size={14} strokeWidth={1.8} />
+                  </span>
+                  <span className="cc-nav-cta-text">Anfrage starten</span>
                 </button>
               </div>
             </div>
