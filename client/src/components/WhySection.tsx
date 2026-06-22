@@ -32,7 +32,7 @@ export default function WhySection() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2 });
 
   return (
-    <section id="warum" className="bg-white py-12 md:py-16">
+    <section id="warum" className="cc-why-section py-12 md:py-16">
       <div className="container">
         {/* Header */}
         <motion.div
@@ -42,13 +42,14 @@ export default function WhySection() {
           ref={ref}
           className="max-w-3xl mx-auto text-center mb-10 md:mb-14"
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.23em] text-emerald-600 mb-3">
+          <p className="cc-why-kicker mb-3">
             Warum Classic-Clean
           </p>
           <h2 className="text-3xl md:text-4xl font-semibold text-slate-950 leading-tight mb-4">
-            Reinigung, die planbar bleibt.
+            Reinigung, die
+            <span className="cc-why-highlight"> planbar bleibt.</span>
           </h2>
-          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-8">
+          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-8 text-balance">
             Für Unternehmen, die nicht nur saubere Flächen erwarten, sondern feste Ansprechpartner, klare Abläufe und zuverlässige Betreuung.
           </p>
         </motion.div>
@@ -58,7 +59,7 @@ export default function WhySection() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.08 }}
-          className="max-w-2xl mx-auto mb-8 md:mb-12 rounded-[2rem] border border-slate-200 bg-slate-50/50 p-6 md:p-8"
+          className="cc-why-main-card max-w-2xl mx-auto mb-8 md:mb-12 rounded-[2rem] border p-6 md:p-8"
         >
           <h3 className="text-2xl md:text-2xl font-semibold text-slate-950 leading-snug mb-4">
             Feste Betreuung.
@@ -80,9 +81,10 @@ export default function WhySection() {
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.16 + i * 0.08 }}
-              className="rounded-[1.25rem] border border-slate-200 bg-white p-4 md:p-5 shadow-sm hover:shadow-md transition-shadow duration-200"
+              whileHover={{ y: -2 }}
+              className="cc-why-benefit-card rounded-[1.25rem] border p-4 md:p-5"
             >
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+              <div className="cc-why-benefit-icon mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl">
                 <benefit.icon size={18} className="stroke-[1.8]" />
               </div>
               <h4 className="text-sm md:text-base font-semibold text-slate-950">
@@ -93,22 +95,27 @@ export default function WhySection() {
         </motion.div>
 
         {/* Proof Strip */}
-        <motion.div
+        <motion.ul
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.4, delay: 0.4 }}
-          className="flex flex-wrap items-center justify-center gap-2 text-sm md:text-base text-slate-600 px-4"
+          className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-2.5 md:gap-3 px-4"
         >
           {proofItems.map((item, i) => (
-            <div key={item.text} className="flex items-center gap-2">
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-                <item.icon size={12} />
+            <motion.li
+              key={item.text}
+              initial={{ opacity: 0, y: 8 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.3, delay: 0.44 + i * 0.06 }}
+              className="cc-why-proof-pill"
+            >
+              <div className="cc-why-proof-icon flex h-5 w-5 items-center justify-center rounded-full">
+                <item.icon size={12} aria-hidden="true" />
               </div>
               <span>{item.text}</span>
-              {i < proofItems.length - 1 && <span className="mx-1 text-slate-300">·</span>}
-            </div>
+            </motion.li>
           ))}
-        </motion.div>
+        </motion.ul>
       </div>
     </section>
   );
