@@ -542,6 +542,19 @@
     flex-shrink: 0;
   }
 
+  .cc-nav-logo-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+    transition: opacity 0.2s ease;
+  }
+
+  .cc-nav-logo:hover .cc-nav-logo-img {
+    opacity: 0.88;
+  }
+
   .cc-nav-logo-pill {
     display: inline-flex;
     align-items: center;

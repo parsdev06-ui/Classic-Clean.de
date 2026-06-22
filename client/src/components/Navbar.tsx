@@ -43,8 +43,11 @@ export default function Navbar() {
 
             {/* Logo */}
             <a href="/" className="cc-nav-logo" aria-label="Classic-Clean – Startseite">
-              <span className="cc-nav-logo-pill">CC</span>
-              <span className="cc-nav-logo-text">Classic-Clean</span>
+              <img
+                src="/cc-logo.png"
+                alt="Classic-Clean Logo"
+                className="cc-nav-logo-img"
+              />
             </a>
 
             {/* Desktop Nav Island */}
